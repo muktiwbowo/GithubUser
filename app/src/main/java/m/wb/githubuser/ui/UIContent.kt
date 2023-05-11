@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -42,6 +43,7 @@ fun UIContent(
 
 @Composable
 fun UISearch(searchState: MutableState<TextFieldValue>, users: MutableState<List<DataUser>>) {
+    val focusManager = LocalFocusManager.current
     OutlinedTextField(
         modifier = Modifier.fillMaxWidth(),
         value = searchState.value,
@@ -54,6 +56,7 @@ fun UISearch(searchState: MutableState<TextFieldValue>, users: MutableState<List
             onSearch = {
                 /* NOTE: call api based on search value
                 * remove dummy when response api is ready */
+                focusManager.clearFocus()
                 val user = DataUser(searchState.value.text, "username")
                 if (searchState.value.text.isNotEmpty()) {
                     users.value = listOf(
