@@ -34,7 +34,8 @@ class MainActivity : ComponentActivity() {
                         content = {
                             UIContent(
                                 searchValue = searchValue,
-                                image = R.drawable.ic_launcher_background
+                                image = R.drawable.ic_launcher_background,
+                                status = "error"
                             )
                         })
                 }
@@ -53,7 +54,8 @@ fun DefaultPreview() {
         }) {
             UIContent(
                 searchValue = searchValue,
-                image = R.drawable.ic_launcher_background
+                image = R.drawable.ic_launcher_background,
+                status = "error"
             )
         }
     }

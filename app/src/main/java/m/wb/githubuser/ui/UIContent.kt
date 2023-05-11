@@ -24,10 +24,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun UIContent(searchValue: MutableState<TextFieldValue>, image: Int) {
+fun UIContent(searchValue: MutableState<TextFieldValue>, image: Int, status: String) {
     Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 20.dp)) {
         UISearch(searchValue)
-        UIUser(searchValue, image)
+        if (status.contains("loading")) UIStatus(message = "Loading...")
+        else if (status.contains("success")) UIUser(searchState = searchValue, image = image)
+        else {
+            UIStatus(message = "Not Found")
+        }
     }
 }
 
@@ -95,4 +99,17 @@ fun UIUser(searchState: MutableState<TextFieldValue>, image: Int) {
             }
         }
     }
+}
+
+@Composable
+fun UIStatus(message: String) {
+    Text(
+        text = message,
+        modifier = Modifier
+            .fillMaxSize()
+            .wrapContentSize(align = Alignment.Center),
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Medium,
+        color = Color.Black
+    )
 }
