@@ -1,9 +1,9 @@
 package m.wb.githubuser.ui
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -15,20 +15,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import m.wb.githubuser.data.DataUser
+import m.wb.githubuser.data.dummyUsers
 
 @Composable
-fun UIContent(searchValue: MutableState<TextFieldValue>, image: Int, status: String) {
+fun UIContent(
+    searchValue: MutableState<TextFieldValue>,
+    users: MutableState<List<DataUser>>,
+    status: String
+) {
     Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 20.dp)) {
-        UISearch(searchValue)
+        UISearch(searchState = searchValue, users = users)
         if (status.contains("loading")) UIStatus(message = "Loading...")
-        else if (status.contains("success")) UIUser(searchState = searchValue, image = image)
+        else if (status.contains("success")) UIUser(users = users)
         else {
             UIStatus(message = "Not Found")
         }
@@ -36,8 +41,7 @@ fun UIContent(searchValue: MutableState<TextFieldValue>, image: Int, status: Str
 }
 
 @Composable
-fun UISearch(searchState: MutableState<TextFieldValue>) {
-    val context = LocalContext.current
+fun UISearch(searchState: MutableState<TextFieldValue>, users: MutableState<List<DataUser>>) {
     OutlinedTextField(
         modifier = Modifier.fillMaxWidth(),
         value = searchState.value,
@@ -48,18 +52,29 @@ fun UISearch(searchState: MutableState<TextFieldValue>) {
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(
             onSearch = {
-                /* call api based on search value */
-                Toast.makeText(context, searchState.value.text, Toast.LENGTH_SHORT).show()
+                /* NOTE: call api based on search value
+                * remove dummy when response api is ready */
+                val user = DataUser(searchState.value.text, "username")
+                if (searchState.value.text.isNotEmpty()) {
+                    users.value = listOf(
+                        user,
+                        user,
+                        user,
+                        user,
+                        user
+                    )
+                } else {
+                    users.value = dummyUsers
+                }
             }
         )
     )
 }
 
 @Composable
-fun UIUser(searchState: MutableState<TextFieldValue>, image: Int) {
-    val name = searchState.value.text
+fun UIUser(users: MutableState<List<DataUser>>) {
     LazyColumn(contentPadding = PaddingValues(horizontal = 4.dp, vertical = 8.dp)) {
-        items(5) {
+        items(users.value) { user ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -71,7 +86,7 @@ fun UIUser(searchState: MutableState<TextFieldValue>, image: Int) {
                     modifier = Modifier
                         .clip(CircleShape)
                         .size(48.dp),
-                    painter = painterResource(id = image),
+                    painter = painterResource(id = user.avatar),
                     contentDescription = "avatar",
                 )
                 Column(
@@ -82,7 +97,7 @@ fun UIUser(searchState: MutableState<TextFieldValue>, image: Int) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 2.dp),
-                        text = name.ifEmpty { "Full Name" },
+                        text = user.name,
                         color = Color.Black,
                         fontWeight = FontWeight.Medium,
                         fontSize = 14.sp
@@ -90,7 +105,7 @@ fun UIUser(searchState: MutableState<TextFieldValue>, image: Int) {
                     /* username */
                     Text(
                         modifier = Modifier.padding(bottom = 2.dp),
-                        text = "@username",
+                        text = user.username,
                         color = Color.Gray,
                         fontWeight = FontWeight.Light,
                         fontSize = 12.sp

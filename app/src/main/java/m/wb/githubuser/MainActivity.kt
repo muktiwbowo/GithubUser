@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
+import m.wb.githubuser.data.dummyUsers
 import m.wb.githubuser.ui.UIContent
 import m.wb.githubuser.ui.UIHeader
 import m.wb.githubuser.ui.theme.GithubUserTheme
@@ -23,6 +24,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             /* state of username value */
             val searchValue = remember { mutableStateOf(TextFieldValue("")) }
+            val users = remember { mutableStateOf(dummyUsers) }
             GithubUserTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -34,8 +36,8 @@ class MainActivity : ComponentActivity() {
                         content = {
                             UIContent(
                                 searchValue = searchValue,
-                                image = R.drawable.ic_launcher_background,
-                                status = "error"
+                                users = users,
+                                status = "success"
                             )
                         })
                 }
@@ -48,14 +50,15 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     val searchValue = remember { mutableStateOf(TextFieldValue("")) }
+    val users = remember { mutableStateOf(dummyUsers) }
     GithubUserTheme {
         Scaffold(topBar = {
             UIHeader()
         }) {
             UIContent(
                 searchValue = searchValue,
-                image = R.drawable.ic_launcher_background,
-                status = "error"
+                users = users,
+                status = "status"
             )
         }
     }
