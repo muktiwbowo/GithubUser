@@ -10,7 +10,9 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,42 +24,54 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import m.wb.githubuser.R
 import m.wb.githubuser.data.BaseData
+import m.wb.githubuser.service.Status
+import m.wb.githubuser.viewmodel.ViewModelUser
 
 @Composable
 fun UIContent(
-    searchValue: MutableState<TextFieldValue>,
-    users: MutableState<List<BaseData.DataUser>>,
-    status: String
+    viewModelUser: ViewModelUser = hiltViewModel()
 ) {
+    val state = viewModelUser.getUsersByUsername.observeAsState()
     Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 20.dp)) {
-        UISearch(searchState = searchValue, users = users)
-        if (status.contains("loading")) UIStatus(message = "Loading...")
-        else if (status.contains("success")) UIUser(users = users)
-        else {
-            UIStatus(message = "Not Found")
+        UISearch()
+
+        when (state.value) {
+            is Status.Loading -> {
+                UIStatus(message = "Loading...")
+            }
+            is Status.Success -> {
+                val values = state.value?.data
+                if (!values.isNullOrEmpty()) UIUser(users = values)
+                else UIStatus(message = "Not found")
+            }
+            is Status.Error -> {
+                UIStatus(message = "Something is wrong with github api")
+            }
         }
     }
 }
 
 @Composable
 fun UISearch(
-    searchState: MutableState<TextFieldValue>,
-    users: MutableState<List<BaseData.DataUser>>
+    viewModelUser: ViewModelUser = hiltViewModel()
 ) {
+    val searchValue = remember { mutableStateOf(TextFieldValue("")) }
     val focusManager = LocalFocusManager.current
     OutlinedTextField(
         modifier = Modifier.fillMaxWidth(),
-        value = searchState.value,
+        value = searchValue.value,
         onValueChange = { result ->
-            searchState.value = result
+            searchValue.value = result
         },
         placeholder = { Text(text = "Search...") },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(
             onSearch = {
-                /* NOTE: call api based on search value */
+                /* call api based on search value */
+                viewModelUser.getUsersByUsername(searchValue.value.text)
                 focusManager.clearFocus()
             }
         )
@@ -65,9 +79,9 @@ fun UISearch(
 }
 
 @Composable
-fun UIUser(users: MutableState<List<BaseData.DataUser>>) {
+fun UIUser(users: List<BaseData.DataUser>) {
     LazyColumn(contentPadding = PaddingValues(horizontal = 4.dp, vertical = 8.dp)) {
-        items(users.value) { user ->
+        items(users) { user ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
