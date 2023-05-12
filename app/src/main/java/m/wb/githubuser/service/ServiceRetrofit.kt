@@ -29,8 +29,7 @@ fun instance(): API {
 interface API {
     @GET("search/users")
     suspend fun getUsersByUsername(
-        @Query("q") username: String,
-        @Query("per_page") perPage: Int
+        @Query("q") username: String
     ): Response<BaseData>
 }
 
