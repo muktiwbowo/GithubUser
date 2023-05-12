@@ -15,7 +15,7 @@ fun instance(): API {
             requestBuilder.addHeader("Accept", "application/vnd.github.text-match+json")
             requestBuilder.addHeader(
                 "Authorization",
-                "Bearer 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"
+                "Bearer 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"
             )
             chain.proceed(requestBuilder.build())
         }
