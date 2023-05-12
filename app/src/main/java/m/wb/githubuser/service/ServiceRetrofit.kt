@@ -11,7 +11,7 @@ import retrofit2.http.Query
 fun instance(): API {
     val client = OkHttpClient.Builder().addNetworkInterceptor { chain ->
         with(chain.request()) {
-            val requestBuilder = newBuilder().method(method(), body())
+            val requestBuilder = newBuilder().method(method, body)
             requestBuilder.addHeader("Accept", "application/vnd.github.text-match+json")
             requestBuilder.addHeader(
                 "Authorization",

@@ -25,6 +25,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
 import m.wb.githubuser.R
 import m.wb.githubuser.data.BaseData
 import m.wb.githubuser.service.Status
@@ -93,7 +94,7 @@ fun UIUser(users: List<BaseData.DataUser>) {
                     modifier = Modifier
                         .clip(CircleShape)
                         .size(48.dp),
-                    painter = painterResource(id = R.drawable.ic_launcher_background),
+                    painter = rememberAsyncImagePainter(user.avatar),
                     contentDescription = "avatar",
                 )
                 Text(
