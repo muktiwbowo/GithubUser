@@ -22,8 +22,16 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField "String", "ACCESS_TOKEN", '"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"'
+            buildConfigField "String", "BASE_URL", '"https://api.github.com/"'
+            buildConfigField "String", "HEADER_ACCEPT", '"application/vnd.github.text-match+json"'
+        }
         release {
             minifyEnabled false
+            buildConfigField "String", "ACCESS_TOKEN", '"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"'
+            buildConfigField "String", "BASE_URL", '"https://api.github.com/"'
+            buildConfigField "String", "HEADER_ACCEPT", '"application/vnd.github.text-match+json"'
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

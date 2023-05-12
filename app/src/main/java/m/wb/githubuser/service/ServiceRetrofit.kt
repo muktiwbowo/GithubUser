@@ -1,5 +1,6 @@
 package m.wb.githubuser.service
 
+import m.wb.githubuser.BuildConfig
 import m.wb.githubuser.data.BaseData
 import okhttp3.OkHttpClient
 import retrofit2.Response
@@ -12,15 +13,15 @@ fun instance(): API {
     val client = OkHttpClient.Builder().addNetworkInterceptor { chain ->
         with(chain.request()) {
             val requestBuilder = newBuilder().method(method, body)
-            requestBuilder.addHeader("Accept", "application/vnd.github.text-match+json")
+            requestBuilder.addHeader("Accept", BuildConfig.HEADER_ACCEPT)
             requestBuilder.addHeader(
                 "Authorization",
-                "Bearer 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"
+                "Bearer ${BuildConfig.ACCESS_TOKEN}"
             )
             chain.proceed(requestBuilder.build())
         }
     }
-    return Retrofit.Builder().baseUrl("https://api.github.com/")
+    return Retrofit.Builder().baseUrl(BuildConfig.BASE_URL)
         .client(client.build())
         .addConverterFactory(GsonConverterFactory.create())
         .build().create(API::class.java)
