@@ -8,7 +8,10 @@ data class BaseData(
     @SerializedName("incomplete_results")
     val incompleteResults: Boolean,
     @SerializedName("items")
-    val items: List<DataUser>
+    val items: List<DataUser>,
+    @SerializedName("message")
+    val message: String
+
 ) {
     data class DataUser(
         @SerializedName("login")

@@ -49,7 +49,7 @@ fun UIContent(
                 else UIStatus(message = "Not found")
             }
             is Status.Error -> {
-                UIStatus(message = "Something is wrong with github api")
+                UIStatus(message = state.value?.message ?: "Something is wrong with github api")
             }
         }
     }
