@@ -23,6 +23,16 @@ android {
 
     buildTypes {
         debug {
+            /** When you get bad credentials error message
+             * change ACCESS_TOKEN with your personal access token from github
+             * 1. Click your profile
+             * 2. Click settings
+             * 3. Click developer settings
+             * 4. Click tokens (classic)
+             * 5. Create token
+             * 6. Copy and replace created token in this gradle with key ACCESS_TOKEN below
+             * */
+
             buildConfigField "String", "ACCESS_TOKEN", '"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"'
             buildConfigField "String", "BASE_URL", '"https://api.github.com/"'
             buildConfigField "String", "HEADER_ACCEPT", '"application/vnd.github.text-match+json"'
