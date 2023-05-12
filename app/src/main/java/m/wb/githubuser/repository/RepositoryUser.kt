@@ -1,11 +1,12 @@
 package m.wb.githubuser.repository
 
-import m.wb.githubuser.data.DataUser
+import m.wb.githubuser.data.BaseData
 import m.wb.githubuser.service.API
 import m.wb.githubuser.service.Status
+import javax.inject.Inject
 
-class RepositoryUser(private val api: API) {
-    suspend fun getUsersByUsername(username: String): Status<DataUser> {
+class RepositoryUser @Inject constructor(private val api: API) {
+    suspend fun getUsersByUsername(username: String): Status<BaseData> {
         try {
             val response = api.getUsersByUsername(username, 20)
             val body = response.body()

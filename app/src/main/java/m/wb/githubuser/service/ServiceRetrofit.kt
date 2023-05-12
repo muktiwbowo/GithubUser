@@ -1,9 +1,10 @@
 package m.wb.githubuser.service
 
-import m.wb.githubuser.data.DataUser
+import m.wb.githubuser.data.BaseData
 import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -19,17 +20,18 @@ fun instance(): API {
             chain.proceed(requestBuilder.build())
         }
     }
-    return Retrofit.Builder().baseUrl("https://api.github.com/search/users")
+    return Retrofit.Builder().baseUrl("https://api.github.com/")
         .client(client.build())
+        .addConverterFactory(GsonConverterFactory.create())
         .build().create(API::class.java)
 }
 
 interface API {
-    @GET
+    @GET("search/users")
     suspend fun getUsersByUsername(
         @Query("q") username: String,
         @Query("per_page") perPage: Int
-    ): Response<DataUser>
+    ): Response<BaseData>
 }
 
 sealed class Status<T>(

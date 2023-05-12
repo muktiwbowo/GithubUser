@@ -38,7 +38,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion compose_version
+        kotlinCompilerExtensionVersion "1.1.0-beta01"
     }
     packagingOptions {
         resources {
@@ -48,8 +48,11 @@ android {
 }
 
 dependencies {
+    def compose_version = '1.1.0-beta01'
     //third parties
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
 
     //hilt
     implementation 'com.google.dagger:hilt-android:2.38'

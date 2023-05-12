@@ -22,13 +22,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import m.wb.githubuser.data.DataUser
-import m.wb.githubuser.data.dummyUsers
+import m.wb.githubuser.R
+import m.wb.githubuser.data.BaseData
 
 @Composable
 fun UIContent(
     searchValue: MutableState<TextFieldValue>,
-    users: MutableState<List<DataUser>>,
+    users: MutableState<List<BaseData.DataUser>>,
     status: String
 ) {
     Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 20.dp)) {
@@ -42,7 +42,10 @@ fun UIContent(
 }
 
 @Composable
-fun UISearch(searchState: MutableState<TextFieldValue>, users: MutableState<List<DataUser>>) {
+fun UISearch(
+    searchState: MutableState<TextFieldValue>,
+    users: MutableState<List<BaseData.DataUser>>
+) {
     val focusManager = LocalFocusManager.current
     OutlinedTextField(
         modifier = Modifier.fillMaxWidth(),
@@ -54,28 +57,15 @@ fun UISearch(searchState: MutableState<TextFieldValue>, users: MutableState<List
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(
             onSearch = {
-                /* NOTE: call api based on search value
-                * remove dummy when response api is ready */
+                /* NOTE: call api based on search value */
                 focusManager.clearFocus()
-                val user = DataUser(searchState.value.text, "username")
-                if (searchState.value.text.isNotEmpty()) {
-                    users.value = listOf(
-                        user,
-                        user,
-                        user,
-                        user,
-                        user
-                    )
-                } else {
-                    users.value = dummyUsers
-                }
             }
         )
     )
 }
 
 @Composable
-fun UIUser(users: MutableState<List<DataUser>>) {
+fun UIUser(users: MutableState<List<BaseData.DataUser>>) {
     LazyColumn(contentPadding = PaddingValues(horizontal = 4.dp, vertical = 8.dp)) {
         items(users.value) { user ->
             Row(
@@ -89,31 +79,18 @@ fun UIUser(users: MutableState<List<DataUser>>) {
                     modifier = Modifier
                         .clip(CircleShape)
                         .size(48.dp),
-                    painter = painterResource(id = user.avatar),
+                    painter = painterResource(id = R.drawable.ic_launcher_background),
                     contentDescription = "avatar",
                 )
-                Column(
-                    modifier = Modifier.padding(horizontal = 12.dp)
-                ) {
-                    /* full name */
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 2.dp),
-                        text = user.name,
-                        color = Color.Black,
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 14.sp
-                    )
-                    /* username */
-                    Text(
-                        modifier = Modifier.padding(bottom = 2.dp),
-                        text = user.username,
-                        color = Color.Gray,
-                        fontWeight = FontWeight.Light,
-                        fontSize = 12.sp
-                    )
-                }
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp),
+                    text = user.name,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 14.sp
+                )
             }
         }
     }

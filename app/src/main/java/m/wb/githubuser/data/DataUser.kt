@@ -1,15 +1,19 @@
 package m.wb.githubuser.data
 
-import m.wb.githubuser.R
+import com.google.gson.annotations.SerializedName
 
-data class DataUser(
-    val name: String,
-    val username: String,
-    val avatar: Int = R.drawable.ic_launcher_background
-)
-
-val dummyUsers = listOf(DataUser(name = "John One", "johndoeone"),
-    DataUser(name = "John Two", "johndoetwo"),
-    DataUser(name = "John Three", "johndoethree"),
-    DataUser(name = "John Four", "johndoefour"),
-    DataUser(name = "John Five", "johndoefive"))
+data class BaseData(
+    @SerializedName("total_count")
+    val totalCount: Long,
+    @SerializedName("incomplete_results")
+    val incompleteResults: Boolean,
+    @SerializedName("items")
+    val items: List<DataUser>
+) {
+    data class DataUser(
+        @SerializedName("login")
+        val name: String,
+        @SerializedName("avatar_url")
+        val avatar: String
+    )
+}
